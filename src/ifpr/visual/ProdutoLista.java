@@ -5,22 +5,30 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.table.DefaultTableModel;
+
+import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
+import java.awt.FlowLayout;
+import javax.swing.JTable;
+import java.awt.Color;
+import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.ActionEvent;
 
 public class ProdutoLista extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tbListagem;
 
 	/**
 	 * Launch the application.
@@ -42,40 +50,87 @@ public class ProdutoLista extends JFrame {
 	 * Create the frame.
 	 */
 	public ProdutoLista() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setTitle("Listagem de Produtos");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 894, 654);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		table = new JTable();
-		table.setBounds(6, 66, 434, 167);
-		contentPane.add(table);
+		JPanel panel = new JPanel();
+		contentPane.add(panel, BorderLayout.NORTH);
+		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JLabel lblNewLabel = new JLabel("Produtos");
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(10, 32, 434, 16);
-		contentPane.add(lblNewLabel);
+		JLabel lbTitulo = new JLabel("Produtos");
+		lbTitulo.setFont(new Font("Dialog", Font.BOLD, 20));
+		lbTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lbTitulo.setBackground(new Color(255, 192, 203));
+		lbTitulo.setForeground(new Color(255, 255, 255));
+		lbTitulo.setOpaque(true);
+		panel.add(lbTitulo);
 		
-		JToolBar toolBar = new JToolBar();
-		toolBar.setBounds(0, 0, 450, 20);
-		contentPane.add(toolBar);
+		JToolBar tbAcoes = new JToolBar();
+		tbAcoes.setBackground(Color.WHITE);
+		panel.add(tbAcoes);
 		
 		JButton btNovo = new JButton("Novo");
-		toolBar.add(btNovo);
+		btNovo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ProdutoCadastro prod = new ProdutoCadastro();
+				prod.setVisible(true);
+			}
+		});
+		btNovo.setBackground(Color.WHITE);
+		btNovo.setIcon(new ImageIcon(ProdutoLista.class.getResource("/ico/plus-24.png")));
+		btNovo.setMnemonic('n');
+		tbAcoes.add(btNovo);
 		
-		JSeparator separator = new JSeparator();
-		separator.setOrientation(SwingConstants.VERTICAL);
-		toolBar.add(separator);
+		tbAcoes.addSeparator();
 		
-		JButton btExcluir = new JButton("Excluir");
-		toolBar.add(btExcluir);
+		JButton btnAlterar = new JButton("Alterar");
+		btnAlterar.setBackground(Color.WHITE);
+		btnAlterar.setIcon(new ImageIcon(ProdutoLista.class.getResource("/ico/edit-2-24.png")));
+		btnAlterar.setMnemonic('a');
+		tbAcoes.add(btnAlterar);
+		
+		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.setBackground(Color.WHITE);
+		btnExcluir.setIcon(new ImageIcon(ProdutoLista.class.getResource("/ico/x-mark-24.png")));
+		btnExcluir.setMnemonic('e');
+		tbAcoes.add(btnExcluir);
+		
+		tbAcoes.addSeparator();
 		
 		JButton btFechar = new JButton("Fechar");
-		btFechar.setBounds(327, 237, 117, 29);
-		contentPane.add(btFechar);
+		btFechar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		btFechar.setBackground(Color.WHITE);
+		btFechar.setIcon(new ImageIcon(ProdutoLista.class.getResource("/ico/exit-24.png")));
+		btFechar.setMnemonic('f');
+		tbAcoes.add(btFechar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		contentPane.add(scrollPane, BorderLayout.CENTER);
+		
+		tbListagem = new JTable(new DefaultTableModel());
+		scrollPane.setViewportView(tbListagem);
+
+		listar();
 	}
+	
+	private void listar() {
+		DefaultTableModel model = (DefaultTableModel) tbListagem.getModel();
+		
+		model.addColumn("Nome");
+		model.addColumn("Preço");
+		
+		model.addRow(new Object[] {"Hidratante", 35.9});
+		model.addRow(new Object[] {"Shampoo", 59.9});
+	}
+
 }

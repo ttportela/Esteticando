@@ -9,6 +9,7 @@ import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -39,6 +40,16 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal() {
+		try {
+			UIManager.setLookAndFeel(
+			        UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		setExtendedState(MAXIMIZED_BOTH);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 666, 300);
 		
