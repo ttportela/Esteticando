@@ -7,6 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import ifpr.controle.ProdutoFabrica;
+import ifpr.modelo.ProdutoPrateleira;
+
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
@@ -23,6 +26,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class ProdutoLista extends JFrame {
@@ -31,27 +35,11 @@ public class ProdutoLista extends JFrame {
 	private JTable tbListagem;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProdutoLista frame = new ProdutoLista();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	public ProdutoLista() {
 		setTitle("Listagem de Produtos");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 894, 654);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -80,6 +68,32 @@ public class ProdutoLista extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				ProdutoCadastro prod = new ProdutoCadastro();
 				prod.setVisible(true);
+				
+				prod.addWindowListener(new WindowListener() {
+					
+					@Override
+					public void windowOpened(WindowEvent e) {}
+					
+					@Override
+					public void windowIconified(WindowEvent e) {}
+					
+					@Override
+					public void windowDeiconified(WindowEvent e) {}
+					
+					@Override
+					public void windowDeactivated(WindowEvent e) {}
+					
+					@Override
+					public void windowClosing(WindowEvent e) {}
+					
+					@Override
+					public void windowClosed(WindowEvent e) {
+						listar();
+					}
+					
+					@Override
+					public void windowActivated(WindowEvent e) {}
+				});
 			}
 		});
 		btNovo.setBackground(Color.WHITE);
@@ -117,20 +131,28 @@ public class ProdutoLista extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
-		tbListagem = new JTable(new DefaultTableModel());
+		tbListagem = new JTable();
 		scrollPane.setViewportView(tbListagem);
-
 		listar();
+
 	}
 	
 	private void listar() {
-		DefaultTableModel model = (DefaultTableModel) tbListagem.getModel();
+		DefaultTableModel model = new DefaultTableModel();
 		
 		model.addColumn("Nome");
 		model.addColumn("Preço");
+		model.addColumn("QTD.");
 		
-		model.addRow(new Object[] {"Hidratante", 35.9});
-		model.addRow(new Object[] {"Shampoo", 59.9});
+		ProdutoFabrica fabrica = new ProdutoFabrica();
+		List<ProdutoPrateleira> ls = fabrica.listar();
+		
+		for (ProdutoPrateleira p : ls) {
+			model.addRow(new Object[] {p.getNome(), p.getPreco(), 
+					p.getQuantidadeDisponivel()});
+		}
+		
+		tbListagem.setModel(model);
 	}
 
 }

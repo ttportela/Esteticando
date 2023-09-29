@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -20,7 +21,10 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import ifpr.controle.ProdutoFabrica;
 import ifpr.modelo.ProdutoPrateleira;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ProdutoCadastro extends JFrame {
 
@@ -28,28 +32,13 @@ public class ProdutoCadastro extends JFrame {
 	private JTextField txNome;
 	private JTextField txPreco;
 	private JTextField txQtd;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProdutoCadastro frame = new ProdutoCadastro();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JTextPane txDescicao;
 
 	/**
 	 * Create the frame.
 	 */
 	public ProdutoCadastro() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 673, 367);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -61,13 +50,13 @@ public class ProdutoCadastro extends JFrame {
 		contentPane.add(pnTopo, BorderLayout.NORTH);
 		pnTopo.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JLabel lblProdutoXxxx = new JLabel("Produto: XXXX");
-		lblProdutoXxxx.setOpaque(true);
-		lblProdutoXxxx.setHorizontalAlignment(SwingConstants.CENTER);
-		lblProdutoXxxx.setForeground(Color.WHITE);
-		lblProdutoXxxx.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblProdutoXxxx.setBackground(new Color(255, 192, 203));
-		pnTopo.add(lblProdutoXxxx);
+		JLabel lblProduto = new JLabel("Produto: XXXX");
+		lblProduto.setOpaque(true);
+		lblProduto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblProduto.setForeground(Color.WHITE);
+		lblProduto.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblProduto.setBackground(new Color(255, 192, 203));
+		pnTopo.add(lblProduto);
 		
 		JToolBar tbAcoes = new JToolBar();
 		tbAcoes.setBackground(Color.WHITE);
@@ -76,9 +65,7 @@ public class ProdutoCadastro extends JFrame {
 		JButton btnAlterar = new JButton("Salvar");
 		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProdutoPrateleira p = new ProdutoPrateleira();
-				p.setNome(txNome.getText());
-				p.
+				salvarProduto();
 			}
 		});
 		btnAlterar.setBackground(Color.WHITE);
@@ -109,6 +96,12 @@ public class ProdutoCadastro extends JFrame {
 		pnCorpo.add(lbNome);
 		
 		txNome = new JTextField();
+		txNome.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				lblProduto.setText("Produto: " + txNome.getText());
+			}
+		});
 		sl_pnCorpo.putConstraint(SpringLayout.WEST, txNome, 10, SpringLayout.EAST, lbNome);
 		sl_pnCorpo.putConstraint(SpringLayout.EAST, txNome, -10, SpringLayout.EAST, pnCorpo);
 		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbNome, 0, SpringLayout.SOUTH, txNome);
@@ -116,7 +109,7 @@ public class ProdutoCadastro extends JFrame {
 		txNome.setColumns(10);
 		pnCorpo.add(txNome);
 		
-		JTextPane txDescicao = new JTextPane();
+		txDescicao = new JTextPane();
 		sl_pnCorpo.putConstraint(SpringLayout.WEST, txDescicao, 0, SpringLayout.WEST, lbNome);
 		sl_pnCorpo.putConstraint(SpringLayout.EAST, txDescicao, 0, SpringLayout.EAST, txNome);
 		pnCorpo.add(txDescicao);
@@ -154,5 +147,26 @@ public class ProdutoCadastro extends JFrame {
 		sl_pnCorpo.putConstraint(SpringLayout.EAST, txQtd, 246, SpringLayout.EAST, lbQtEstoque);
 		txQtd.setColumns(10);
 		pnCorpo.add(txQtd);
+	}
+
+	private void salvarProduto() {
+		ProdutoPrateleira p = new ProdutoPrateleira();
+		p.setNome(txNome.getText());
+		p.setDescricao(txDescicao.getText());
+		p.setPreco(Double.valueOf(txPreco.getText()));
+		p.setQuantidadeDisponivel(Integer.valueOf(txQtd.getText()));
+		
+		ProdutoFabrica fabrica = new ProdutoFabrica();
+		if ( fabrica.salvar(p) ) {
+			JOptionPane.showMessageDialog(this, 
+					"Produto salvo com sucesso!", "Sucesso", 
+					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, 
+					"Não foi possível salvar! Tente mais tarde.", "Atenção", 
+					JOptionPane.ERROR_MESSAGE);
+		}
+		
+		dispose();
 	}
 }
