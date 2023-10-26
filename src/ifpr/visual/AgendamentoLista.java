@@ -29,7 +29,7 @@ import java.awt.event.WindowListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-public class ProcedimentoLista extends JFrame {
+public class AgendamentoLista extends JFrame {
 
 	private JPanel contentPane;
 	private JTable tbListagem;
@@ -37,8 +37,8 @@ public class ProcedimentoLista extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProcedimentoLista() {
-		setTitle("Listagem de Procedimentos");
+	public AgendamentoLista() {
+		setTitle("Agendamentos");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 894, 654);
 		contentPane = new JPanel();
@@ -51,7 +51,7 @@ public class ProcedimentoLista extends JFrame {
 		contentPane.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JLabel lbTitulo = new JLabel("Procedimentos");
+		JLabel lbTitulo = new JLabel("Agendamentos");
 		lbTitulo.setFont(new Font("Dialog", Font.BOLD, 20));
 		lbTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lbTitulo.setBackground(new Color(255, 192, 203));
@@ -66,7 +66,7 @@ public class ProcedimentoLista extends JFrame {
 		JButton btNovo = new JButton("Novo");
 		btNovo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ProcedimentoCadastro prod = new ProcedimentoCadastro();
+				AgendamentoCadastro prod = new AgendamentoCadastro();
 				prod.setVisible(true);
 				
 				prod.addWindowListener(new WindowListener() {
@@ -97,7 +97,7 @@ public class ProcedimentoLista extends JFrame {
 			}
 		});
 		btNovo.setBackground(Color.WHITE);
-		btNovo.setIcon(new ImageIcon(ProcedimentoLista.class.getResource("/ico/plus-24.png")));
+		btNovo.setIcon(new ImageIcon(AgendamentoLista.class.getResource("/ico/plus-24.png")));
 		btNovo.setMnemonic('n');
 		tbAcoes.add(btNovo);
 		
@@ -105,13 +105,13 @@ public class ProcedimentoLista extends JFrame {
 		
 		JButton btnAlterar = new JButton("Alterar");
 		btnAlterar.setBackground(Color.WHITE);
-		btnAlterar.setIcon(new ImageIcon(ProcedimentoLista.class.getResource("/ico/edit-2-24.png")));
+		btnAlterar.setIcon(new ImageIcon(AgendamentoLista.class.getResource("/ico/edit-2-24.png")));
 		btnAlterar.setMnemonic('a');
 		tbAcoes.add(btnAlterar);
 		
 		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.setBackground(Color.WHITE);
-		btnExcluir.setIcon(new ImageIcon(ProcedimentoLista.class.getResource("/ico/x-mark-24.png")));
+		btnExcluir.setIcon(new ImageIcon(AgendamentoLista.class.getResource("/ico/x-mark-24.png")));
 		btnExcluir.setMnemonic('e');
 		tbAcoes.add(btnExcluir);
 		
@@ -124,7 +124,7 @@ public class ProcedimentoLista extends JFrame {
 			}
 		});
 		btFechar.setBackground(Color.WHITE);
-		btFechar.setIcon(new ImageIcon(ProcedimentoLista.class.getResource("/ico/exit-24.png")));
+		btFechar.setIcon(new ImageIcon(AgendamentoLista.class.getResource("/ico/exit-24.png")));
 		btFechar.setMnemonic('f');
 		tbAcoes.add(btFechar);
 		

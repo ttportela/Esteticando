@@ -26,7 +26,7 @@ import ifpr.modelo.ProdutoPrateleira;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class ProdutoCadastro extends JFrame {
+public class ProfissionalCadastro extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txNome;
@@ -37,7 +37,7 @@ public class ProdutoCadastro extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProdutoCadastro() {
+	public ProfissionalCadastro() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 673, 367);
 		contentPane = new JPanel();
@@ -50,7 +50,7 @@ public class ProdutoCadastro extends JFrame {
 		contentPane.add(pnTopo, BorderLayout.NORTH);
 		pnTopo.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JLabel lblProduto = new JLabel("Produto: XXXX");
+		JLabel lblProduto = new JLabel("Profissional: XXXX");
 		lblProduto.setOpaque(true);
 		lblProduto.setHorizontalAlignment(SwingConstants.CENTER);
 		lblProduto.setForeground(Color.WHITE);
@@ -69,7 +69,7 @@ public class ProdutoCadastro extends JFrame {
 			}
 		});
 		btnAlterar.setBackground(Color.WHITE);
-		btnAlterar.setIcon(new ImageIcon(ProdutoCadastro.class.getResource("/ico/checkmark-24.png")));
+		btnAlterar.setIcon(new ImageIcon(ProfissionalCadastro.class.getResource("/ico/checkmark-24.png")));
 		btnAlterar.setMnemonic('s');
 		tbAcoes.add(btnAlterar);
 		

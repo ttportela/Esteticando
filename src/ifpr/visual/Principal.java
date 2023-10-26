@@ -45,12 +45,22 @@ public class Principal extends JFrame {
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem miAtendimentos = new JMenuItem("Atendimentos...");
+		miAtendimentos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new AtendimentoLista().setVisible(true);
+			}
+		});
 		mnNewMenu.add(miAtendimentos);
 		
 		JSeparator separator_2 = new JSeparator();
 		mnNewMenu.add(separator_2);
 		
 		JMenuItem miAgendamentos = new JMenuItem("Agendamentos...");
+		miAgendamentos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new AgendamentoLista().setVisible(true);
+			}
+		});
 		mnNewMenu.add(miAgendamentos);
 		
 		JMenu mnNewMenu_1 = new JMenu("Cadastros");
@@ -68,15 +78,30 @@ public class Principal extends JFrame {
 		mnNewMenu_1.add(miProdutos);
 		
 		JMenuItem miProcedimentos = new JMenuItem("Procedimentos ...");
+		miProcedimentos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ProcedimentoLista().setVisible(true);
+			}
+		});
 		mnNewMenu_1.add(miProcedimentos);
 		
 		JSeparator separator = new JSeparator();
 		mnNewMenu_1.add(separator);
 		
 		JMenuItem miClientes = new JMenuItem("Clientes ...");
+		miClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ClienteLista().setVisible(true);
+			}
+		});
 		mnNewMenu_1.add(miClientes);
 		
 		JMenuItem miProfissionais = new JMenuItem("Profissionais ...");
+		miProfissionais.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ProfissionalLista().setVisible(true);
+			}
+		});
 		mnNewMenu_1.add(miProfissionais);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
