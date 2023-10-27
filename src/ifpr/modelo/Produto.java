@@ -1,6 +1,6 @@
 package ifpr.modelo;
 
-public abstract class Produto {
+public abstract class Produto extends DataObject {
 
 	private String nome;
 	private String descricao;

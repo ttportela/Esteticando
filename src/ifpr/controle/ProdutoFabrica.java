@@ -12,14 +12,10 @@ import ifpr.modelo.ProdutoPrateleira;
 
 public class ProdutoFabrica {
 	
-	private static ArrayList<ProdutoPrateleira> BD = new ArrayList<ProdutoPrateleira>();
-	
-	public static void main(String[] args) {
-		ProdutoFabrica f = new ProdutoFabrica();
-		f.listar();
-	}
-	
 	public List<ProdutoPrateleira> listar() {
+
+		ArrayList<ProdutoPrateleira> lista = new ArrayList<>();
+		
 		Connection con = Conexao.getInstancia().getCon();
 		String sql = "SELECT * FROM produto_prateleira";
 		
@@ -29,8 +25,13 @@ public class ProdutoFabrica {
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				System.out.println(rs.getString("nome"));
-				System.out.println(rs.getDouble("preco"));
+				ProdutoPrateleira item = new ProdutoPrateleira();
+				item.setId(rs.getInt("id"));
+				item.setNome(rs.getString("nome"));
+				item.setDescricao(rs.getString("descricao"));
+				item.setPreco(rs.getDouble("preco"));
+				item.setQuantidadeDisponivel(rs.getInt("qtd_disponivel"));
+				lista.add(item);
 			}
 			
 			// Feche recursos
@@ -40,26 +41,58 @@ public class ProdutoFabrica {
 			e.printStackTrace();
 		} 
 		
-		
-		return BD;
+		return lista;
 	}
 	
 	public boolean salvar(ProdutoPrateleira obj) {
-		if (BD.contains(obj)) {
-			return true;
+		Connection con = Conexao.getInstancia().getCon();
+		
+		String sql;
+		if (obj.ehNovo()) {
+			sql = "INSERT INTO produto_prateleira "
+					+ "(nome,descricao,preco,qtd_disponivel) VALUES (?,?,?,?)";
 		} else {
-			BD.add(obj);
-			return true;
+			sql = "UPDATE produto_prateleira "
+					+ "SET nome=?, descricao=?, preco=?, qtd_disponivel=? "
+					+ "WHERE id=?";
 		}
+		
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setString(1, obj.getNome());
+			stmt.setString(2, obj.getDescricao());
+			stmt.setDouble(3, obj.getPreco());
+			stmt.setInt(4, obj.getQuantidadeDisponivel());
+			
+			if (!obj.ehNovo())
+				stmt.setInt(5, obj.getId());
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public boolean excluir(ProdutoPrateleira obj) {
-		if (BD.contains(obj)) {
-			BD.remove(obj);
-			return true;
-		} else {
+		Connection con = Conexao.getInstancia().getCon();
+		
+		String sql = "DELETE FROM produto_prateleira WHERE id=?";
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, obj.getId());
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return false;
 		}
+
+		return true;
 	}
 
 }
