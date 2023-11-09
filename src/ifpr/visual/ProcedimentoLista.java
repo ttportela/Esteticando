@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ifpr.controle.ProdutoFabrica;
+import ifpr.controle.bd.fabrica.ProdutoFabrica;
 import ifpr.modelo.ProdutoPrateleira;
 
 import java.awt.BorderLayout;

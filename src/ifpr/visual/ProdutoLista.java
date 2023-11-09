@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ifpr.controle.ProdutoFabrica;
+import ifpr.controle.bd.fabrica.ProdutoFabrica;
 import ifpr.modelo.ProdutoPrateleira;
 
 import java.awt.BorderLayout;
@@ -104,12 +104,57 @@ public class ProdutoLista extends JFrame {
 		tbAcoes.addSeparator();
 		
 		JButton btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ProdutoCadastro prod = new ProdutoCadastro();
+				
+				ProdutoPrateleira p = lista.get( tbListagem.getSelectedRow() );
+				prod.setProduto(p);
+				
+				prod.setVisible(true);
+				
+				prod.addWindowListener(new WindowListener() {
+					
+					@Override
+					public void windowOpened(WindowEvent e) {}
+					
+					@Override
+					public void windowIconified(WindowEvent e) {}
+					
+					@Override
+					public void windowDeiconified(WindowEvent e) {}
+					
+					@Override
+					public void windowDeactivated(WindowEvent e) {}
+					
+					@Override
+					public void windowClosing(WindowEvent e) {}
+					
+					@Override
+					public void windowClosed(WindowEvent e) {
+						listar();
+					}
+					
+					@Override
+					public void windowActivated(WindowEvent e) {}
+				});
+			}
+		});
 		btnAlterar.setBackground(Color.WHITE);
 		btnAlterar.setIcon(new ImageIcon(ProdutoLista.class.getResource("/ico/edit-2-24.png")));
 		btnAlterar.setMnemonic('a');
 		tbAcoes.add(btnAlterar);
 		
 		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ProdutoPrateleira p = lista.get( tbListagem.getSelectedRow() );
+				
+				ProdutoFabrica fabrica = new ProdutoFabrica();
+				fabrica.excluir(p);
+				listar();
+			}
+		});
 		btnExcluir.setBackground(Color.WHITE);
 		btnExcluir.setIcon(new ImageIcon(ProdutoLista.class.getResource("/ico/x-mark-24.png")));
 		btnExcluir.setMnemonic('e');
@@ -137,6 +182,8 @@ public class ProdutoLista extends JFrame {
 
 	}
 	
+	private List<ProdutoPrateleira> lista;
+	
 	private void listar() {
 		DefaultTableModel model = new DefaultTableModel();
 		
@@ -145,9 +192,9 @@ public class ProdutoLista extends JFrame {
 		model.addColumn("QTD.");
 		
 		ProdutoFabrica fabrica = new ProdutoFabrica();
-		List<ProdutoPrateleira> ls = fabrica.listar();
+		lista = fabrica.listar();
 		
-		for (ProdutoPrateleira p : ls) {
+		for (ProdutoPrateleira p : lista) {
 			model.addRow(new Object[] {p.getNome(), p.getPreco(), 
 					p.getQuantidadeDisponivel()});
 		}

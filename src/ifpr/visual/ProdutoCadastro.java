@@ -21,7 +21,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import ifpr.controle.ProdutoFabrica;
+import ifpr.controle.bd.fabrica.ProdutoFabrica;
 import ifpr.modelo.ProdutoPrateleira;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -149,15 +149,28 @@ public class ProdutoCadastro extends JFrame {
 		pnCorpo.add(txQtd);
 	}
 
+	private ProdutoPrateleira produto = new ProdutoPrateleira();
+	
+	public void setProduto(ProdutoPrateleira produto) {
+		this.produto = produto;
+		txNome.setText(produto.getNome());
+		txDescicao.setText(produto.getDescricao());
+		txPreco.setText(String.valueOf(produto.getPreco()));
+		txQtd.setText(String.valueOf(produto.getQuantidadeDisponivel()));
+	}
+	
+	public ProdutoPrateleira getProduto() {
+		return produto;
+	}
+	
 	private void salvarProduto() {
-		ProdutoPrateleira p = new ProdutoPrateleira();
-		p.setNome(txNome.getText());
-		p.setDescricao(txDescicao.getText());
-		p.setPreco(Double.valueOf(txPreco.getText()));
-		p.setQuantidadeDisponivel(Integer.valueOf(txQtd.getText()));
+		produto.setNome(txNome.getText());
+		produto.setDescricao(txDescicao.getText());
+		produto.setPreco(Double.valueOf(txPreco.getText()));
+		produto.setQuantidadeDisponivel(Integer.valueOf(txQtd.getText()));
 		
 		ProdutoFabrica fabrica = new ProdutoFabrica();
-		if ( fabrica.salvar(p) ) {
+		if ( fabrica.salvar(produto) ) {
 			JOptionPane.showMessageDialog(this, 
 					"Produto salvo com sucesso!", "Sucesso", 
 					JOptionPane.INFORMATION_MESSAGE);

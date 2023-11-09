@@ -21,7 +21,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import ifpr.controle.ProdutoFabrica;
+import ifpr.controle.bd.fabrica.ProdutoFabrica;
 import ifpr.modelo.ProdutoPrateleira;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;

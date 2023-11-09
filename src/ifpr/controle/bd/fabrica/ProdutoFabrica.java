@@ -1,4 +1,4 @@
-package ifpr.controle;
+package ifpr.controle.bd.fabrica;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
