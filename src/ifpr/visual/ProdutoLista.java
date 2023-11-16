@@ -1,33 +1,30 @@
 package ifpr.visual;
 
-import java.awt.EventQueue;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import ifpr.controle.bd.fabrica.ProdutoFabrica;
 import ifpr.modelo.ProdutoPrateleira;
-
-import java.awt.BorderLayout;
-import javax.swing.JScrollPane;
-import java.awt.GridLayout;
-import javax.swing.JLabel;
-import javax.swing.JToolBar;
-import java.awt.FlowLayout;
-import javax.swing.JTable;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import javax.swing.JSeparator;
-import javax.swing.ImageIcon;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.List;
-import java.awt.event.ActionEvent;
 
 public class ProdutoLista extends JFrame {
 
@@ -148,11 +145,19 @@ public class ProdutoLista extends JFrame {
 		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 				ProdutoPrateleira p = lista.get( tbListagem.getSelectedRow() );
 				
-				ProdutoFabrica fabrica = new ProdutoFabrica();
-				fabrica.excluir(p);
-				listar();
+				int op = JOptionPane.showConfirmDialog(null, 
+						"Tem certeza que deseja excluir "+p.getNome()+"?", 
+						"Confirma", JOptionPane.YES_NO_OPTION);
+				
+				if (op ==  JOptionPane.YES_OPTION) { 
+				
+					ProdutoFabrica fabrica = new ProdutoFabrica();
+					fabrica.excluir(p);
+					listar();
+				}
 			}
 		});
 		btnExcluir.setBackground(Color.WHITE);

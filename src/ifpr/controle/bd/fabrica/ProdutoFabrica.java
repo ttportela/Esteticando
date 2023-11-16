@@ -8,11 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ifpr.controle.bd.Conexao;
+import ifpr.modelo.Procedimento;
 import ifpr.modelo.ProdutoPrateleira;
 
-public class ProdutoFabrica {
+public class ProdutoFabrica extends Fabrica<ProdutoPrateleira> {
 	
 	public List<ProdutoPrateleira> listar() {
+		return super.listar("SELECT * FROM produto_prateleira");
+	}
+	
+	/*public List<ProdutoPrateleira> listar() {
 
 		ArrayList<ProdutoPrateleira> lista = new ArrayList<>();
 		
@@ -42,7 +47,7 @@ public class ProdutoFabrica {
 		} 
 		
 		return lista;
-	}
+	}*/
 	
 	public boolean salvar(ProdutoPrateleira obj) {
 		Connection con = Conexao.getInstancia().getCon();
@@ -77,7 +82,22 @@ public class ProdutoFabrica {
 		return true;
 	}
 	
-	public boolean excluir(ProdutoPrateleira obj) {
+	public boolean excluir(ProdutoPrateleira item) {
+		return super.excluir("produto_prateleira", item);
+	}
+
+	@Override
+	protected ProdutoPrateleira instanciar(ResultSet rs) throws SQLException {
+		ProdutoPrateleira item = new ProdutoPrateleira();
+		item.setId(rs.getInt("id"));
+		item.setNome(rs.getString("nome"));
+		item.setDescricao(rs.getString("descricao"));
+		item.setPreco(rs.getDouble("preco"));
+		item.setQuantidadeDisponivel(rs.getInt("qtd_disponivel"));
+		return item;
+	}
+	
+	/*public boolean excluir(ProdutoPrateleira obj) {
 		Connection con = Conexao.getInstancia().getCon();
 		
 		String sql = "DELETE FROM produto_prateleira WHERE id=?";
@@ -93,6 +113,6 @@ public class ProdutoFabrica {
 		}
 
 		return true;
-	}
+	}*/
 
 }

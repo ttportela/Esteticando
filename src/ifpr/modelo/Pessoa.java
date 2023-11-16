@@ -2,7 +2,7 @@ package ifpr.modelo;
 
 import java.time.LocalDate;
 
-public abstract class Pessoa {
+public abstract class Pessoa extends DataObject {
 	
 	private String nome;
 	private String cpf;
