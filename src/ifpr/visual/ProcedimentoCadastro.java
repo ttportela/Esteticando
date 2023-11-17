@@ -2,11 +2,12 @@ package ifpr.visual;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,17 +22,17 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import ifpr.controle.bd.fabrica.ProdutoFabrica;
-import ifpr.modelo.ProdutoPrateleira;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import ifpr.controle.bd.fabrica.ProcedimentoFabrica;
+import ifpr.modelo.Procedimento;
 
 public class ProcedimentoCadastro extends JFrame {
 
+	private Procedimento item = new Procedimento();
+	
 	private JPanel contentPane;
 	private JTextField txNome;
 	private JTextField txPreco;
-	private JTextField txQtd;
+	private JTextField txDuracao;
 	private JTextPane txDescicao;
 
 	/**
@@ -39,7 +40,7 @@ public class ProcedimentoCadastro extends JFrame {
 	 */
 	public ProcedimentoCadastro() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 673, 367);
+		setBounds(100, 100, 673, 354);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -65,7 +66,7 @@ public class ProcedimentoCadastro extends JFrame {
 		JButton btnAlterar = new JButton("Salvar");
 		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				salvarProduto();
+				salvarItem();
 			}
 		});
 		btnAlterar.setBackground(Color.WHITE);
@@ -124,42 +125,44 @@ public class ProcedimentoCadastro extends JFrame {
 		JLabel lbPreco = new JLabel("Preço:");
 		sl_pnCorpo.putConstraint(SpringLayout.NORTH, lbPreco, 9, SpringLayout.SOUTH, txDescicao);
 		sl_pnCorpo.putConstraint(SpringLayout.WEST, lbPreco, 10, SpringLayout.WEST, pnCorpo);
-		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbPreco, -48, SpringLayout.SOUTH, pnCorpo);
+		sl_pnCorpo.putConstraint(SpringLayout.EAST, lbPreco, -576, SpringLayout.EAST, pnCorpo);
 		pnCorpo.add(lbPreco);
 		
 		txPreco = new JTextField();
-		sl_pnCorpo.putConstraint(SpringLayout.EAST, lbPreco, -6, SpringLayout.WEST, txPreco);
+		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbPreco, 0, SpringLayout.SOUTH, txPreco);
 		sl_pnCorpo.putConstraint(SpringLayout.EAST, txPreco, 333, SpringLayout.WEST, pnCorpo);
 		sl_pnCorpo.putConstraint(SpringLayout.WEST, txPreco, 93, SpringLayout.WEST, pnCorpo);
 		sl_pnCorpo.putConstraint(SpringLayout.NORTH, txPreco, 6, SpringLayout.SOUTH, txDescicao);
 		txPreco.setColumns(10);
 		pnCorpo.add(txPreco);
 		
-		JLabel lbQtEstoque = new JLabel("Qt. Estoque:");
+		JLabel lbQtEstoque = new JLabel("Duração:");
 		sl_pnCorpo.putConstraint(SpringLayout.NORTH, lbQtEstoque, 6, SpringLayout.SOUTH, lbPreco);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, lbQtEstoque, 0, SpringLayout.WEST, lbNome);
-		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbQtEstoque, -30, SpringLayout.SOUTH, pnCorpo);
+		sl_pnCorpo.putConstraint(SpringLayout.WEST, lbQtEstoque, 10, SpringLayout.WEST, pnCorpo);
+		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbQtEstoque, 32, SpringLayout.SOUTH, lbPreco);
 		pnCorpo.add(lbQtEstoque);
 		
-		txQtd = new JTextField();
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, txQtd, 6, SpringLayout.SOUTH, txPreco);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, txQtd, 6, SpringLayout.EAST, lbQtEstoque);
-		sl_pnCorpo.putConstraint(SpringLayout.EAST, txQtd, 246, SpringLayout.EAST, lbQtEstoque);
-		txQtd.setColumns(10);
-		pnCorpo.add(txQtd);
+		txDuracao = new JTextField();
+		sl_pnCorpo.putConstraint(SpringLayout.NORTH, txDuracao, 6, SpringLayout.SOUTH, txPreco);
+		sl_pnCorpo.putConstraint(SpringLayout.EAST, lbQtEstoque, -6, SpringLayout.WEST, txDuracao);
+		sl_pnCorpo.putConstraint(SpringLayout.WEST, txDuracao, 0, SpringLayout.WEST, txPreco);
+		sl_pnCorpo.putConstraint(SpringLayout.EAST, txDuracao, -330, SpringLayout.EAST, pnCorpo);
+		txDuracao.setColumns(10);
+		pnCorpo.add(txDuracao);
 	}
 
-	private void salvarProduto() {
-		ProdutoPrateleira p = new ProdutoPrateleira();
-		p.setNome(txNome.getText());
-		p.setDescricao(txDescicao.getText());
-		p.setPreco(Double.valueOf(txPreco.getText()));
-		p.setQuantidadeDisponivel(Integer.valueOf(txQtd.getText()));
+	private void salvarItem() {
+		// O item é a variável de classe do JFrame, pode ser um 
+		// procedimento novo ou um existente 
+		item.setNome(txNome.getText());
+		item.setDescricao(txDescicao.getText());
+		item.setPreco(Double.valueOf(txPreco.getText()));
+		item.setDuracaoEstimada(Integer.valueOf(txDuracao.getText()));
 		
-		ProdutoFabrica fabrica = new ProdutoFabrica();
-		if ( fabrica.salvar(p) ) {
+		ProcedimentoFabrica fabrica = new ProcedimentoFabrica();
+		if ( fabrica.salvar(item) ) {
 			JOptionPane.showMessageDialog(this, 
-					"Produto salvo com sucesso!", "Sucesso", 
+					"Procedimento salvo com sucesso!", "Sucesso", 
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, 
@@ -168,5 +171,17 @@ public class ProcedimentoCadastro extends JFrame {
 		}
 		
 		dispose();
+	}
+
+	public void setItem(Procedimento item) {
+		this.item = item;
+		txNome.setText(item.getNome());
+		txDescicao.setText(item.getDescricao());
+		txPreco.setText(String.valueOf(item.getPreco()));
+		txDuracao.setText(String.valueOf(item.getDuracaoEstimada()));
+	}
+	
+	public Procedimento getItem() {
+		return item;
 	}
 }

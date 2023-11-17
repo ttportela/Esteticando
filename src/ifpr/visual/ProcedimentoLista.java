@@ -1,33 +1,32 @@
 package ifpr.visual;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import ifpr.controle.bd.fabrica.ProdutoFabrica;
-import ifpr.modelo.ProdutoPrateleira;
-
 import java.awt.BorderLayout;
-import javax.swing.JScrollPane;
-import java.awt.GridLayout;
-import javax.swing.JLabel;
-import javax.swing.JToolBar;
-import java.awt.FlowLayout;
-import javax.swing.JTable;
 import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import javax.swing.JSeparator;
-import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.List;
-import java.awt.event.ActionEvent;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import ifpr.controle.bd.fabrica.ProcedimentoFabrica;
+import ifpr.controle.bd.fabrica.ProdutoFabrica;
+import ifpr.modelo.Procedimento;
+import ifpr.modelo.ProdutoPrateleira;
 
 public class ProcedimentoLista extends JFrame {
 
@@ -66,34 +65,12 @@ public class ProcedimentoLista extends JFrame {
 		JButton btNovo = new JButton("Novo");
 		btNovo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ProcedimentoCadastro prod = new ProcedimentoCadastro();
-				prod.setVisible(true);
-				
-				prod.addWindowListener(new WindowListener() {
-					
-					@Override
-					public void windowOpened(WindowEvent e) {}
-					
-					@Override
-					public void windowIconified(WindowEvent e) {}
-					
-					@Override
-					public void windowDeiconified(WindowEvent e) {}
-					
-					@Override
-					public void windowDeactivated(WindowEvent e) {}
-					
-					@Override
-					public void windowClosing(WindowEvent e) {}
-					
-					@Override
-					public void windowClosed(WindowEvent e) {
-						listar();
-					}
-					
-					@Override
-					public void windowActivated(WindowEvent e) {}
-				});
+				ProcedimentoCadastro tela = new ProcedimentoCadastro();
+				tela.setVisible(true);
+
+				// Método que adiciona um evento para listar os itens
+				// quando a tela fechar
+				addEventoAtualizar(tela);
 			}
 		});
 		btNovo.setBackground(Color.WHITE);
@@ -104,12 +81,41 @@ public class ProcedimentoLista extends JFrame {
 		tbAcoes.addSeparator();
 		
 		JButton btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ProcedimentoCadastro telaCad = new ProcedimentoCadastro();
+				
+				Procedimento item = lista.get( tbListagem.getSelectedRow() );
+				telaCad.setItem(item);
+
+				telaCad.setVisible(true);
+				// Método que adiciona um evento para listar os itens
+				// quando a tela fechar
+				addEventoAtualizar(telaCad);
+				
+			}
+		});
 		btnAlterar.setBackground(Color.WHITE);
 		btnAlterar.setIcon(new ImageIcon(ProcedimentoLista.class.getResource("/ico/edit-2-24.png")));
 		btnAlterar.setMnemonic('a');
 		tbAcoes.add(btnAlterar);
 		
 		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Procedimento item = lista.get( tbListagem.getSelectedRow() );
+				
+				int op = JOptionPane.showConfirmDialog(null, 
+						"Tem certeza que deseja excluir "+item.getNome()+"?", 
+						"Confirma", JOptionPane.YES_NO_OPTION);
+				
+				if (op ==  JOptionPane.YES_OPTION) { 
+					ProcedimentoFabrica fabrica = new ProcedimentoFabrica();
+					fabrica.excluir(item);
+					listar();
+				}
+			}
+		});
 		btnExcluir.setBackground(Color.WHITE);
 		btnExcluir.setIcon(new ImageIcon(ProcedimentoLista.class.getResource("/ico/x-mark-24.png")));
 		btnExcluir.setMnemonic('e');
@@ -137,22 +143,52 @@ public class ProcedimentoLista extends JFrame {
 
 	}
 	
+	List<Procedimento> lista;
+	
 	private void listar() {
 		DefaultTableModel model = new DefaultTableModel();
 		
 		model.addColumn("Nome");
 		model.addColumn("Preço");
-		model.addColumn("QTD.");
+		model.addColumn("Duração");
 		
-		ProdutoFabrica fabrica = new ProdutoFabrica();
-		List<ProdutoPrateleira> ls = fabrica.listar();
+		ProcedimentoFabrica fabrica = new ProcedimentoFabrica();
+		lista = fabrica.listar();
 		
-		for (ProdutoPrateleira p : ls) {
-			model.addRow(new Object[] {p.getNome(), p.getPreco(), 
-					p.getQuantidadeDisponivel()});
+		for (Procedimento item : lista) {
+			model.addRow(new Object[] {item.getNome(), item.getPreco(), 
+					item.getDuracaoEstimada()});
 		}
 		
 		tbListagem.setModel(model);
+	}
+	
+	private void addEventoAtualizar(JFrame tela) {
+		tela.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				listar();
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {}
+		});
 	}
 
 }
