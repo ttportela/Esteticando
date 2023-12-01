@@ -2,7 +2,7 @@ package ifpr.modelo;
 
 import java.util.List;
 
-public class Atendimento {
+public class Atendimento extends DataObject {
 	
 	private Cliente cliente;
 	private Profissional profissional;
