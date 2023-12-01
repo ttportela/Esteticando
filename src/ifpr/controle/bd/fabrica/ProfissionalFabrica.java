@@ -12,6 +12,7 @@ import java.util.List;
 import javax.xml.bind.DatatypeConverter;
 
 import ifpr.controle.bd.Conexao;
+import ifpr.modelo.Cliente;
 import ifpr.modelo.Profissional;
 
 public class ProfissionalFabrica extends Fabrica<Profissional> {
@@ -105,6 +106,31 @@ public class ProfissionalFabrica extends Fabrica<Profissional> {
 	@Override
 	public boolean excluir(Profissional item) {
 		return super.excluir("profissionais", item);
+	}
+
+	public Profissional busca(int id) {
+		Connection con = Conexao.getInstancia().getCon();
+		
+		String sql = "SELECT * FROM profissionais WHERE id=?";
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			stmt.setInt(1, id);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				return instanciar(rs);
+			}
+			
+			// Feche recursos
+			rs.close();
+			stmt.close(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		return null;
 	}
 
 	@Override

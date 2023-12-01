@@ -1,165 +1,151 @@
 package ifpr.visual;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JToolBar;
-import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 
-import ifpr.controle.bd.fabrica.ProdutoFabrica;
-import ifpr.modelo.ProdutoPrateleira;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import ifpr.controle.bd.fabrica.ClienteFabrica;
+import ifpr.controle.bd.fabrica.ProfissionalFabrica;
+import ifpr.modelo.Agendamento;
+import ifpr.modelo.Cliente;
+import ifpr.modelo.Profissional;
+import ifpr.visual.componente.TelaCadastro;
+import ifpr.visual.componente.TopoCadastro;
 
-public class AgendamentoCadastro extends JFrame {
+public class AgendamentoCadastro extends TelaCadastro<Agendamento> {
 
 	private JPanel contentPane;
-	private JTextField txNome;
-	private JTextField txPreco;
-	private JTextField txQtd;
-	private JTextPane txDescicao;
+	private JFormattedTextField txData;
+	private JComboBox<Cliente> cbClientes;
+	private JComboBox<Profissional> cbProfissionais;
 
 	/**
 	 * Create the frame.
 	 */
 	public AgendamentoCadastro() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 673, 367);
+		setBounds(100, 100, 585, 228);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		JPanel pnTopo = new JPanel();
-		contentPane.add(pnTopo, BorderLayout.NORTH);
-		pnTopo.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		JLabel lblProduto = new JLabel("Agendamento");
-		lblProduto.setOpaque(true);
-		lblProduto.setHorizontalAlignment(SwingConstants.CENTER);
-		lblProduto.setForeground(Color.WHITE);
-		lblProduto.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblProduto.setBackground(new Color(255, 192, 203));
-		pnTopo.add(lblProduto);
-		
-		JToolBar tbAcoes = new JToolBar();
-		tbAcoes.setBackground(Color.WHITE);
-		pnTopo.add(tbAcoes);
-		
-		JButton btnAlterar = new JButton("Salvar");
-		btnAlterar.addActionListener(new ActionListener() {
+		TopoCadastro topoCadastro = new TopoCadastro("Agendamento: ", this);
+		topoCadastro.addSalvarListner(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				salvarProduto();
+				salvarItem();
 			}
 		});
-		btnAlterar.setBackground(Color.WHITE);
-		btnAlterar.setIcon(new ImageIcon(AgendamentoCadastro.class.getResource("/ico/checkmark-24.png")));
-		btnAlterar.setMnemonic('s');
-		tbAcoes.add(btnAlterar);
+		contentPane.add(topoCadastro, BorderLayout.NORTH);
 		
-		tbAcoes.addSeparator();
-		JButton btFechar = new JButton("Fechar");
-		btFechar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
-		btFechar.setBackground(Color.WHITE);
-		btFechar.setIcon(new ImageIcon(ProdutoLista.class.getResource("/ico/exit-24.png")));
-		btFechar.setMnemonic('f');
-		tbAcoes.add(btFechar);
+		JPanel panel = new JPanel();
+		contentPane.add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
 		
-		JPanel pnCorpo = new JPanel();
-		contentPane.add(pnCorpo, BorderLayout.CENTER);
-		SpringLayout sl_pnCorpo = new SpringLayout();
-		pnCorpo.setLayout(sl_pnCorpo);
+		JLabel lblNewLabel = new JLabel("Cliente:");
+		lblNewLabel.setBounds(10, 10, 89, 26);
+		panel.add(lblNewLabel);
 		
-		JLabel lbNome = new JLabel("Nome:");
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, lbNome, 10, SpringLayout.NORTH, pnCorpo);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, lbNome, 10, SpringLayout.WEST, pnCorpo);
-		pnCorpo.add(lbNome);
+		JLabel lblEmail = new JLabel("Profissional:");
+		lblEmail.setBounds(10, 48, 89, 26);
+		panel.add(lblEmail);
 		
-		txNome = new JTextField();
-		// Eu alterei para o evento keyReleased para atualizar o título da javela com o nome digitado
-		txNome.addKeyListener(new KeyAdapter() {
-		    public void keyReleased(KeyEvent e) {
-				lblProduto.setText("Produto: " + txNome.getText());
-			}
-		});
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, txNome, 10, SpringLayout.EAST, lbNome);
-		sl_pnCorpo.putConstraint(SpringLayout.EAST, txNome, -10, SpringLayout.EAST, pnCorpo);
-		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbNome, 0, SpringLayout.SOUTH, txNome);
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, txNome, 10, SpringLayout.NORTH, pnCorpo);
-		txNome.setColumns(10);
-		pnCorpo.add(txNome);
+		txData = new JFormattedTextField();
+		txData.setHorizontalAlignment(SwingConstants.CENTER);
+		txData.setBounds(153, 86, 137, 26);
+		try {
+			txData.setFormatterFactory(
+					new DefaultFormatterFactory(
+							new MaskFormatter("##/##/####")));
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		panel.add(txData);
 		
-		txDescicao = new JTextPane();
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, txDescicao, 0, SpringLayout.WEST, lbNome);
-		sl_pnCorpo.putConstraint(SpringLayout.EAST, txDescicao, 0, SpringLayout.EAST, txNome);
-		pnCorpo.add(txDescicao);
+		JLabel lblCpf_1_1 = new JLabel("Data Atendimento:");
+		lblCpf_1_1.setBounds(10, 86, 131, 26);
+		panel.add(lblCpf_1_1);
 		
-		JLabel lbDescricao = new JLabel("Descrição:");
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, txDescicao, 6, SpringLayout.SOUTH, lbDescricao);
-		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, txDescicao, 117, SpringLayout.SOUTH, lbDescricao);
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, lbDescricao, 14, SpringLayout.SOUTH, lbNome);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, lbDescricao, 0, SpringLayout.WEST, lbNome);
-		pnCorpo.add(lbDescricao);
+		cbClientes = new JComboBox();
+		cbClientes.setBounds(93, 11, 479, 27);
+		panel.add(cbClientes);
 		
-		JLabel lbPreco = new JLabel("Preço:");
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, lbPreco, 9, SpringLayout.SOUTH, txDescicao);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, lbPreco, 10, SpringLayout.WEST, pnCorpo);
-		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbPreco, -48, SpringLayout.SOUTH, pnCorpo);
-		pnCorpo.add(lbPreco);
+		cbProfissionais = new JComboBox();
+		cbProfissionais.setBounds(93, 48, 479, 27);
+		panel.add(cbProfissionais);
 		
-		txPreco = new JTextField();
-		sl_pnCorpo.putConstraint(SpringLayout.EAST, lbPreco, -6, SpringLayout.WEST, txPreco);
-		sl_pnCorpo.putConstraint(SpringLayout.EAST, txPreco, 333, SpringLayout.WEST, pnCorpo);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, txPreco, 93, SpringLayout.WEST, pnCorpo);
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, txPreco, 6, SpringLayout.SOUTH, txDescicao);
-		txPreco.setColumns(10);
-		pnCorpo.add(txPreco);
+		// Eu coloco a data de hoje automaticamente só para mostrar:
+		txData.setText(
+				LocalDate.now().format(
+						DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 		
-		JLabel lbQtEstoque = new JLabel("Qt. Estoque:");
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, lbQtEstoque, 6, SpringLayout.SOUTH, lbPreco);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, lbQtEstoque, 0, SpringLayout.WEST, lbNome);
-		sl_pnCorpo.putConstraint(SpringLayout.SOUTH, lbQtEstoque, -30, SpringLayout.SOUTH, pnCorpo);
-		pnCorpo.add(lbQtEstoque);
-		
-		txQtd = new JTextField();
-		sl_pnCorpo.putConstraint(SpringLayout.NORTH, txQtd, 6, SpringLayout.SOUTH, txPreco);
-		sl_pnCorpo.putConstraint(SpringLayout.WEST, txQtd, 6, SpringLayout.EAST, lbQtEstoque);
-		sl_pnCorpo.putConstraint(SpringLayout.EAST, txQtd, 246, SpringLayout.EAST, lbQtEstoque);
-		txQtd.setColumns(10);
-		pnCorpo.add(txQtd);
+		// Vamos preencher os comboboxes no final:
+		listarClientes();
+		listarProfissionais();
+		// Lembre que para aparecerem os nomes dos clientes e profissionais 
+		// no combo box, precisamos do toString na classe do model.
+		// Eu usei o toString na classe Pessoa que é pai de Cliente e Profissional
 	}
-
-	private void salvarProduto() {
-		ProdutoPrateleira p = new ProdutoPrateleira();
-		p.setNome(txNome.getText());
-		p.setDescricao(txDescicao.getText());
-		p.setPreco(Double.valueOf(txPreco.getText()));
-		p.setQuantidadeDisponivel(Integer.valueOf(txQtd.getText()));
+	
+	protected void listarClientes() {
+		ClienteFabrica fabCli = new ClienteFabrica();
 		
-		ProdutoFabrica fabrica = new ProdutoFabrica();
-		if ( fabrica.salvar(p) ) {
+		// O JComboBox tem um model, assim como a JTable
+		// e esse model pode ser uma lista de Cliente
+		DefaultComboBoxModel<Cliente> model = new DefaultComboBoxModel<Cliente>();
+		
+		// Eu faço a listagem do BD e preencho o model:
+		for (Cliente i : fabCli.listar()) {
+			model.addElement(i);
+		}
+		
+		cbClientes.setModel(model);
+	}
+	
+	protected void listarProfissionais() {
+		ProfissionalFabrica fabPro = new ProfissionalFabrica();
+		
+		DefaultComboBoxModel<Profissional> model = 
+				new DefaultComboBoxModel<Profissional>();
+		
+		for (Profissional i : fabPro.listar()) {
+			model.addElement(i);
+		}
+		
+		cbProfissionais.setModel(model);
+	}
+	
+	protected void salvarItem() {
+		// Quando é um novo
+		if (item == null)
+			item = new Agendamento();
+		
+		// A gente preencheu os comboboxes com os objetos, agora é só pegar:
+		item.setCliente((Cliente) cbClientes.getSelectedItem());
+		item.setProfissional((Profissional) cbProfissionais.getSelectedItem());
+		
+		item.setData(LocalDate.parse(txData.getText(), 
+				DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		
+		if ( getFabrica().salvar(item) ) {
 			JOptionPane.showMessageDialog(this, 
-					"Produto salvo com sucesso!", "Sucesso", 
+					"Salvo com sucesso!", "Sucesso", 
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, 
@@ -169,4 +155,15 @@ public class AgendamentoCadastro extends JFrame {
 		
 		dispose();
 	}
+
+	@Override
+	protected void preencheFormulario(Agendamento item) {
+		cbClientes.setSelectedItem(item.getCliente());
+		cbProfissionais.setSelectedItem(item.getProfissional());
+		
+		txData.setText(
+				item.getData().format(
+						DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+	}
+	
 }

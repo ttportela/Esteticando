@@ -67,17 +67,46 @@ public class ClienteFabrica extends Fabrica<Cliente> {
 
 	@Override
 	protected Cliente instanciar(ResultSet rs) throws SQLException {
+		return instanciar(rs, "");
+	}
+	
+	protected Cliente instanciar(ResultSet rs, String prefixo) throws SQLException {
 		Cliente item = new Cliente();
-		item.setId(rs.getInt("id"));
-		item.setNome(rs.getString("nome"));
-		item.setCpf(rs.getString("cpf"));
-		item.setEmail(rs.getString("email"));
-		item.setTelefone(rs.getString("telefone"));
-		item.setEndereco(rs.getString("endereco"));
-		item.setDataNascimento(rs.getDate("dt_nascimento").toLocalDate());
-		item.setTratamento(rs.getString("tratamento"));
-		item.setObservacoes(rs.getString("observacoes"));
+		item.setId(rs.getInt(prefixo+"id"));
+		item.setNome(rs.getString(prefixo+"nome"));
+		item.setCpf(rs.getString(prefixo+"cpf"));
+		item.setEmail(rs.getString(prefixo+"email"));
+		item.setTelefone(rs.getString(prefixo+"telefone"));
+		item.setEndereco(rs.getString(prefixo+"endereco"));
+		item.setDataNascimento(rs.getDate(prefixo+"dt_nascimento").toLocalDate());
+		item.setTratamento(rs.getString(prefixo+"tratamento"));
+		item.setObservacoes(rs.getString(prefixo+"observacoes"));
 		return item;
+	}
+
+	public Cliente busca(int id) {
+		Connection con = Conexao.getInstancia().getCon();
+		
+		String sql = "SELECT * FROM clientes WHERE id=?";
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			stmt.setInt(1, id);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				return instanciar(rs);
+			}
+			
+			// Feche recursos
+			rs.close();
+			stmt.close(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		return null;
 	}
 
 }

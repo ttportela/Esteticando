@@ -2,16 +2,7 @@ package ifpr.modelo;
 
 public class ItemAtendimento {
 	
-	private int quantidade = 1;
 	private Produto item;
-	
-	public int getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
-	}
 
 	public Produto getItem() {
 		return item;
@@ -22,7 +13,9 @@ public class ItemAtendimento {
 	}
 
 	public double calcularSubTotal() {
-		return item.getPreco() * quantidade;
+		return item.getPreco(); 
+		// No futuro podemos ter a quantidade  
+		// return item.getPreco() * quantidade;
 	}
 
 }

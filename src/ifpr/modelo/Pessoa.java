@@ -84,6 +84,9 @@ public abstract class Pessoa extends DataObject {
 		this.dataNascimento = dataNascimento;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return getNome();
+	}
 
 }

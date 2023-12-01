@@ -1,12 +1,24 @@
 package ifpr.modelo;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Atendimento extends DataObject {
 	
+	private LocalDate data;
 	private Cliente cliente;
 	private Profissional profissional;
-	private List<ItemAtendimento> itens;
+	private String observacoes;
+	private List<Produto> itens = new ArrayList<>();
+	
+	public LocalDate getData() {
+		return data;
+	}
+	
+	public void setData(LocalDate data) {
+		this.data = data;
+	}
 	
 	/**
 	 * @return the cliente
@@ -35,23 +47,35 @@ public class Atendimento extends DataObject {
 	public void setProfissional(Profissional profissional) {
 		this.profissional = profissional;
 	}
+	
+	public String getObservacoes() {
+		return observacoes;
+	}
+	
+	public void setObservacoes(String observacoes) {
+		this.observacoes = observacoes;
+	}
 
 	/**
 	 * @return the itens
 	 */
-	public List<ItemAtendimento> getItens() {
+	public List<Produto> getItens() {
 		return itens;
 	}
 
 	/**
 	 * @param itens the itens to set
 	 */
-	public void setItens(List<ItemAtendimento> itens) {
+	public void setItens(List<Produto> itens) {
 		this.itens = itens;
 	}
 
 	public double calcularTotal() {
-		return 0;
+		double total = 0.0;
+		for (Produto p : itens) {
+			total += p.getPreco();
+		}
+		return total;
 	}
 
 }
