@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 import ifpr.visual.Principal;
 
 public class Controladora {
-	
+
 	/**
 	 * Launch the application.
 	 */

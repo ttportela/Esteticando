@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="procedimentos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed0b9670-ee43-4d9e-83c7-9fa3c730618f">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[cHJvZmlzc2lvbmFpcyBBUyAsNjUsMjIwLDhlMzU0MjkwLWUzMzgtNDE2My1iNmEwLTlhNDgzN2Jj
+ZGExMjthZ2VuZGFtZW50b3MgQVMgLDIwLDE0LGI0ZGRhMmZmLTQxMzYtNDNlNy1hOGZlLWYzMDEw
+ZTA1N2M4MztjbGllbnRlcyBBUyAsMjY1LDg2LDhkODc1MGE5LWJiMmMtNDFjMy05NjFhLTg1ZmQx
+NWU0NzY2MTs=]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Estetica"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT agendamentos.data,
+	clientes.nome AS cli_nome,
+	profissionais.nome AS pro_nome
+FROM agendamentos
+	INNER JOIN clientes ON 
+	 agendamentos.id_cliente = clientes.id 
+	INNER JOIN profissionais ON 
+	 agendamentos.id_profissional = profissionais.id]]>
+	</queryString>
+	<field name="data" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="data"/>
+		<property name="com.jaspersoft.studio.field.label" value="data"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="agendamentos"/>
+	</field>
+	<field name="cli_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cli_nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="cli_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="pro_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pro_nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="pro_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="profissionais"/>
+	</field>
+	<group name="pro_nome">
+		<groupExpression><![CDATA[$F{pro_nome}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="19" width="555" height="30" uuid="26d625d8-dd1a-4a30-95be-94d3351d0c48"/>
+				<textElement textAlignment="Center">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório de Agendamentos]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="185" height="30" uuid="5e63a000-71e3-4771-b1a3-0503e163f232">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e02ec95b-bd6c-46f5-a677-5bc09388c73a"/>
+				</reportElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="185" y="0" width="185" height="30" uuid="12a283a6-1985-409b-ac49-724857fe2f22">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dc38aa93-34de-4cf2-ae22-afa875f80167"/>
+				</reportElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="0" width="185" height="30" uuid="3e0ffac3-602f-439b-a5c0-01fbc827ffd8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f335ca0-3078-4549-8e9c-b563178de765"/>
+				</reportElement>
+				<text><![CDATA[Profissional]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="185" height="30" uuid="c587451e-3cfc-4126-ae05-fb58a5494e1a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e02ec95b-bd6c-46f5-a677-5bc09388c73a"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="0" width="185" height="30" uuid="5d0618de-36c8-4eff-b588-24523d1e0e51">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dc38aa93-34de-4cf2-ae22-afa875f80167"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cli_nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="0" width="185" height="30" uuid="ddbb84dc-f94a-4e46-ad64-6351363eab5a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f335ca0-3078-4549-8e9c-b563178de765"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{pro_nome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

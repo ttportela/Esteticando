@@ -1,20 +1,29 @@
 package ifpr.visual;
 
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JToolBar;
-import javax.swing.JButton;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+
+import ifpr.controle.bd.Conexao;
+import ifpr.controle.bd.fabrica.ProdutoFabrica;
+import ifpr.modelo.ProdutoPrateleira;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class Principal extends JFrame {
 
@@ -103,10 +112,62 @@ public class Principal extends JFrame {
 			}
 		});
 		mnNewMenu_1.add(miProfissionais);
+		
+		JMenu mnNewMenu_2 = new JMenu("Relatórios");
+		menuBar.add(mnNewMenu_2);
+		
+		JMenuItem miRelProduto = new JMenuItem("Rel. Produtos");
+		miRelProduto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				abrirRelProdutos();
+			}
+		});
+		mnNewMenu_2.add(miRelProduto);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Agendamentos");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				abrirRelAgendamentos();
+			}
+		});
+		mnNewMenu_2.add(mntmNewMenuItem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+	}
+	
+	private void abrirRelProdutos() {
+		String template = "produtos.jasper";
+		ProdutoFabrica fabrica = new ProdutoFabrica();
+		List<ProdutoPrateleira> list = fabrica.listar();
+		
+		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+		
+		Map parameters = new HashMap();
+		try {
+			JasperPrint relatorio = JasperFillManager.fillReport(
+					template, parameters, dataSource);
+			JasperViewer.viewReport(relatorio,true);
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void abrirRelAgendamentos() {
+		String template = "agendamentos.jasper";
+		
+		Connection con = Conexao.getInstancia().getCon();
+		
+		Map parameters = new HashMap();
+		try {
+			JasperPrint relatorio = JasperFillManager.fillReport(
+					template, parameters, con);
+			
+			JasperViewer.viewReport(relatorio,true);
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
 	}
 }

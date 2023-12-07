@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="images"/>
 	<classpathentry kind="lib" path="/Users/tarlisportela/workdir/Eclipse-Work/Esteticando/postgresql-42.6.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jasper"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
