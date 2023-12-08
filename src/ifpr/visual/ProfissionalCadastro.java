@@ -3,8 +3,6 @@ package ifpr.visual;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,9 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
-import javax.xml.bind.DatatypeConverter;
 
-import ifpr.modelo.Cliente;
 import ifpr.modelo.Profissional;
 import ifpr.visual.componente.TelaCadastro;
 import ifpr.visual.componente.TopoCadastro;

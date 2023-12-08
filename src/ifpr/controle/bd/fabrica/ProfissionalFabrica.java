@@ -9,10 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.xml.bind.DatatypeConverter;
-
 import ifpr.controle.bd.Conexao;
-import ifpr.modelo.Cliente;
 import ifpr.modelo.Profissional;
 
 public class ProfissionalFabrica extends Fabrica<Profissional> {
@@ -92,8 +89,7 @@ public class ProfissionalFabrica extends Fabrica<Profissional> {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 		    md.update(senha.getBytes());
 		    byte[] digest = md.digest();
-		    String hash = DatatypeConverter
-		      .printHexBinary(digest).toUpperCase();
+		    String hash = new String(digest).toUpperCase();
 		    
 		    return hash;
 		} catch (NoSuchAlgorithmException e) {
